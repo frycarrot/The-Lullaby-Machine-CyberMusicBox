@@ -158,3 +158,5 @@ https://frycarrot.github.io/The-Lullaby-Machine-CyberMusicBox/#%5B八音盒%3A�
 - [纸带码解析与链接生成](js/musicbox.js)
 - 英文字体 Pinyon Script（SIL OFL 1.1，随仓库分发）；中文字体霞鹜文楷 Light（SIL OFL 1.1，经 jsDelivr 按需加载，打不开时回退系统楷体）。
 - 3D 渲染使用 three.js r158（MIT）。
+
+- 高音谱号采用 [Bravura](https://github.com/steinbergmedia/bravura) 的标准 SMuFL G clef（U+E050）轮廓，按原比例绘制；[SIL OFL 1.1 许可](fonts/OFL-Bravura.txt)。

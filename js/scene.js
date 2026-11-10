@@ -283,12 +283,10 @@
     // 高音谱号：旋涡绕在 G4（第 5 行）
     var s = rowPx / 6;
     g.save();
-    g.translate(uX(1.0), rowY(5) - 54 * s);
+    g.translate(uX(1.0), rowY(5) - MBNote.CLEF_G_Y * s);
     g.scale(s, s);
-    g.strokeStyle = 'rgba(70,48,34,0.8)'; g.lineWidth = 2; g.lineCap = g.lineJoin = 'round';
-    g.stroke(new Path2D(MBNote.CLEF_PATH));
     g.fillStyle = 'rgba(70,48,34,0.85)';
-    g.beginPath(); g.arc(MBNote.CLEF_BALL.cx, MBNote.CLEF_BALL.cy, MBNote.CLEF_BALL.r, 0, Math.PI * 2); g.fill();
+    g.fill(new Path2D(MBNote.CLEF_PATH));
     g.restore();
 
     var holeR = D.rowH * 0.4 / D.cw * ppc;
