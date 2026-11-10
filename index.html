@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/PinyonScript-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <!-- 中文：霞鹜文楷 Light，按用到的字分片加载；CDN 打不开时回退系统楷体 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-light.css">
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
 </head>
 <body>
   <canvas id="scene"></canvas>
@@ -22,7 +22,7 @@
     </div>
   </header>
 
-  <div id="hint" class="hint hidden">拖动可以转一转 · 点 ▶ 听这段纸带</div>
+  <div id="hint" class="hint hidden">拖动可以转一转 · 点 <svg class="hint-play" width="12" height="12" viewBox="0 0 16 16" aria-label="播放" role="img"><path d="M3 1L14 8L3 15Z"/></svg> 听这段纸带</div>
 
   <nav class="toolbar">
     <button id="btnLetter" class="tag" type="button">
