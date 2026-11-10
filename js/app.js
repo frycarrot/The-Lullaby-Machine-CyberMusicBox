@@ -103,7 +103,7 @@
           setTimeout(function () { MBScene.openLid(); }, 500);
           setTimeout(showHint, 2400);
         }
-        if (entry.hadHash) toast('这条纸带码没读懂，先放一段示例曲子');
+        if (entry.hadHash) toast('Error:纸带码识别错误。迷途的孩子，这不是你的机创作的旋律，听我唱一段，再回去找TA吧。', 10000);
         else if (entry.warnings.length) {
           toast('纸带上有 ' + entry.warnings.length + ' 处小问题，已经自动修好了');
           if (window.console) console.info('[八音盒] 纸带码提示：\n- ' + entry.warnings.join('\n- '));
