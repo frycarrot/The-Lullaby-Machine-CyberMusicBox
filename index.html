@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#05060a">
+  <title>子守唄の機 · The Lullaby Machine</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8E%B5%3C/text%3E%3C/svg%3E">
+  <link rel="preload" href="fonts/PinyonScript-Regular.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- 中文：霞鹜文楷 Light，按用到的字分片加载；CDN 打不开时回退系统楷体 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-light.css">
+  <link rel="stylesheet" href="style.css?v=3">
+</head>
+<body>
+  <canvas id="scene"></canvas>
+  <div class="vignette" aria-hidden="true"></div>
+
+  <header class="top">
+    <div class="brand">
+      <span class="brand-en">The Lullaby Machine</span>
+      <span class="brand-sub"><i class="rule"></i><span class="brand-cn">子守唄の機</span><i class="rule r"></i></span>
+    </div>
+  </header>
+
+  <div id="hint" class="hint hidden">拖动可以转一转 · 点 ▶ 听这段纸带</div>
+
+  <nav class="toolbar">
+    <button id="btnLetter" class="tag" type="button">
+      <span class="tag-text"><span class="en">Letter</span><span class="cn">看寄语</span></span>
+    </button>
+    <button id="btnPlay" class="tag play" type="button" data-state="play" aria-label="播放" disabled>
+      <span class="tag-text">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path class="i-play" d="M7 3.6 Q7 2.6 7.9 3.1 L20 11.1 Q20.9 12 20 12.9 L7.9 20.9 Q7 21.4 7 20.4 Z"/>
+          <g class="i-pause"><rect x="5.8" y="3.6" width="4.4" height="16.8" rx="1.3"/><rect x="13.8" y="3.6" width="4.4" height="16.8" rx="1.3"/></g>
+          <g class="i-replay"><path class="ring" d="M19.6 12.6 A7.8 7.8 0 1 1 17.2 6.2"/><path d="M20.4 2.6 L19.8 9.4 L13.4 7.8 Z"/></g>
+        </svg>
+        <span class="cn" id="playCn">播放</span>
+      </span>
+    </button>
+    <button id="btnSave" class="tag" type="button">
+      <span class="tag-text"><span class="en">Keepsake</span><span class="cn">保存图片</span></span>
+    </button>
+    <button id="btnPaste" class="tag small" type="button">
+      <span class="tag-text"><span class="en">Tape</span><span class="cn">贴纸带码</span></span>
+    </button>
+  </nav>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <!-- 寄语卡片 -->
+  <div id="letter" class="overlay hidden" role="dialog" aria-label="寄语">
+    <article id="card" class="card">
+      <svg class="corner tl" aria-hidden="true"><use href="#scroll"/></svg>
+      <svg class="corner tr" aria-hidden="true"><use href="#scroll"/></svg>
+      <svg class="corner bl" aria-hidden="true"><use href="#scroll"/></svg>
+      <svg class="corner br" aria-hidden="true"><use href="#scroll"/></svg>
+      <header class="card-to"><span class="en">To</span><span id="cardTo" class="cn"></span></header>
+      <svg class="flourish" viewBox="0 0 240 18" aria-hidden="true">
+        <path d="M14 9 C46 1 78 17 108 9 M132 9 C162 1 194 17 226 9"/>
+        <path d="M108 9 C112 3 118 3 120 9 C122 15 128 15 132 9" />
+        <circle cx="120" cy="9" r="1.8" class="fill"/>
+        <path d="M14 9 C10 7 8 11 11 12 M226 9 C230 7 232 11 229 12"/>
+      </svg>
+      <div id="cardMelody" class="card-staff" aria-label="旋律"></div>
+      <div id="cardStamp" class="card-stamp" aria-label="图形戳"></div>
+      <div id="cardMsg" class="card-msg"></div>
+      <footer class="card-from"><span class="en">From</span><span id="cardFrom" class="cn"></span></footer>
+    </article>
+    <p class="overlay-tip">点空白处收起卡片</p>
+  </div>
+
+  <!-- 贴纸带码 -->
+  <div id="paste" class="overlay hidden" role="dialog" aria-label="贴纸带码">
+    <div class="sheet">
+      <h2>把家机给你的纸带码贴进来</h2>
+      <textarea id="pasteText" rows="5" placeholder="[八音盒:速度66|拍号3/4|旋律:(1,1+10);(3,12);(5,10)|图形:(1,8)|To:你|From:我|寄语:晚安]"></textarea>
+      <div class="row">
+        <button id="pasteGo" class="btn" type="button">换上这条纸带</button>
+        <button id="pasteClose" class="btn ghost" type="button">取消</button>
+      </div>
+      <div class="row small">
+        <button id="copyLink" class="link" type="button">复制当前纸带的链接</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 保存图片：两张错位叠放，左右循环切换 -->
+  <div class="poster-layer" id="posterLayer" aria-hidden="true">
+    <div class="poster-box" role="dialog" aria-modal="true" aria-label="保存图片">
+      <div class="poster-stage">
+        <div class="poster-track" id="posterTrack">
+          <figure class="poster-slide"><img id="posterImgScene" alt="八音盒照片"></figure>
+          <figure class="poster-slide"><img id="posterImgCard" alt="寄语卡片"></figure>
+        </div>
+        <button class="poster-arrow prev" id="posterPrev" type="button" aria-label="上一张">‹</button>
+        <button class="poster-arrow next" id="posterNext" type="button" aria-label="下一张">›</button>
+      </div>
+      <div class="poster-dots" id="posterDots">
+        <button type="button" data-i="0" class="on">八音盒</button>
+        <button type="button" data-i="1">寄语卡</button>
+      </div>
+      <div class="poster-actions">
+        <button id="posterSave" class="btn light primary" type="button">保存这张</button>
+        <button id="posterClose" class="btn light" type="button">关闭</button>
+      </div>
+      <p class="poster-tip">左右切换 · 手机上也可以长按图片保存</p>
+    </div>
+  </div>
+
+  <div id="loading" class="loading"><span>正在给八音盒上弦…</span></div>
+  <div id="fatal" class="fatal hidden"></div>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="scroll" viewBox="0 0 100 100">
+      <g fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+        <path d="M10 72 C10 37 37 10 72 10"/>
+        <path d="M72 10 C84 10 92 17 90 26 C88 34 78 34 76 27 C74 22 79 19 82 22"/>
+        <path d="M10 72 C10 84 17 92 26 90 C34 88 34 78 27 76 C22 74 19 79 22 82"/>
+        <path d="M17 17 C23 12 31 15 30 22 C29 26 24 26 24 22"/>
+        <path d="M4 4 L13 13" stroke-width="1"/>
+      </g>
+      <g fill="currentColor" opacity=".85">
+        <path d="M30 27 C36 18 47 15 53 18 C46 22 38 27 30 27Z"/>
+        <path d="M27 30 C18 36 15 47 18 53 C22 46 27 38 27 30Z"/>
+        <path d="M50 14 C56 9 63 9 66 12 C61 14 56 15 50 14Z"/>
+        <path d="M14 50 C9 56 9 63 12 66 C14 61 15 56 14 50Z"/>
+        <circle cx="5" cy="5" r="2.2"/>
+        <circle cx="40" cy="20" r="1.4"/>
+        <circle cx="20" cy="40" r="1.4"/>
+      </g>
+    </symbol>
+  </svg>
+
+  <script src="vendor/three.min.js"></script>
+  <script src="js/musicbox.js?v=2"></script>
+  <script src="js/notation.js?v=2"></script>
+  <script src="js/audio.js?v=1"></script>
+  <script src="js/scene.js?v=3"></script>
+  <script src="js/poster.js?v=3"></script>
+  <script src="js/app.js?v=3"></script>
+</body>
+</html>
