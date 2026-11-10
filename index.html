@@ -9,7 +9,7 @@
   <link rel="preload" href="fonts/PinyonScript-Regular.woff2" as="font" type="font/woff2" crossorigin>
   <!-- 中文：霞鹜文楷 Light，按用到的字分片加载；CDN 打不开时回退系统楷体 -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/lxgwwenkai-light.css">
-  <link rel="stylesheet" href="style.css?v=5">
+  <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
   <canvas id="scene"></canvas>
@@ -85,26 +85,19 @@
     </div>
   </div>
 
-  <!-- 保存图片：两张错位叠放，左右循环切换 -->
+  <!-- 保存图片：一张完整的竖版信纸 -->
   <div class="poster-layer" id="posterLayer" aria-hidden="true">
     <div class="poster-box" role="dialog" aria-modal="true" aria-label="保存图片">
       <div class="poster-stage">
         <div class="poster-track" id="posterTrack">
-          <figure class="poster-slide"><img id="posterImgScene" alt="八音盒照片"></figure>
-          <figure class="poster-slide"><img id="posterImgCard" alt="寄语卡片"></figure>
+          <figure class="poster-slide"><img id="posterImgLetter" alt="八音盒纪念信纸：收件人、图形戳、旋律、照片、寄语与署名"></figure>
         </div>
-        <button class="poster-arrow prev" id="posterPrev" type="button" aria-label="上一张">‹</button>
-        <button class="poster-arrow next" id="posterNext" type="button" aria-label="下一张">›</button>
-      </div>
-      <div class="poster-dots" id="posterDots">
-        <button type="button" data-i="0" class="on">八音盒</button>
-        <button type="button" data-i="1">寄语卡</button>
       </div>
       <div class="poster-actions">
         <button id="posterSave" class="btn light primary" type="button">保存这张</button>
         <button id="posterClose" class="btn light" type="button">关闭</button>
       </div>
-      <p class="poster-tip">左右切换 · 手机上也可以长按图片保存</p>
+      <p class="poster-tip">手机上也可以长按图片保存</p>
     </div>
   </div>
 
@@ -137,7 +130,7 @@
   <script src="js/notation.js?v=3"></script>
   <script src="js/audio.js?v=2"></script>
   <script src="js/scene.js?v=4"></script>
-  <script src="js/poster.js?v=3"></script>
-  <script src="js/app.js?v=4"></script>
+  <script src="js/poster.js?v=4"></script>
+  <script src="js/app.js?v=5"></script>
 </body>
 </html>

@@ -73,11 +73,14 @@
   function showHint() {
     var h = $('hint');
     h.classList.remove('hidden', 'fade');
+    h.classList.add('entering');
+    h.addEventListener('animationend', function () { h.classList.remove('entering'); }, { once: true });
     hintTimer = setTimeout(hideHint, 7000);
   }
   function hideHint() {
     clearTimeout(hintTimer);
     var h = $('hint');
+    h.classList.remove('entering');
     h.classList.add('fade');
     setTimeout(function () { h.classList.add('hidden'); }, 1300);
   }

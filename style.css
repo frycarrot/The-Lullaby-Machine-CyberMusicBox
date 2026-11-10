@@ -58,6 +58,8 @@ html, body {
   text-shadow: 0 1px 3px rgba(0, 0, 0, .9), 0 2px 8px rgba(0, 0, 0, .75), 0 3px 16px rgba(0, 0, 0, .55);
   pointer-events: none; transition: opacity 1.2s;
 }
+.hint.entering { animation: hintEnter 1.2s ease-out both; }
+@keyframes hintEnter { from { opacity: 0; } to { opacity: 1; } }
 .hint.fade { opacity: 0; }
 .hint-play { width: .85em; height: .85em; vertical-align: -.05em; fill: currentColor; filter: drop-shadow(0 1px 3px rgba(0, 0, 0, .9)) drop-shadow(0 2px 8px rgba(0, 0, 0, .6)); }
 
@@ -211,7 +213,7 @@ html, body {
   padding: 24px; text-align: center; background: var(--bg); color: var(--cream); font-size: 16px; line-height: 1.8;
 }
 
-/* 保存图片：两张错位叠放（参考天文台） */
+/* 保存图片：单张竖版信纸 */
 .poster-layer {
   position: fixed; inset: 0; z-index: 40; display: grid; place-items: center;
   background: rgba(3, 4, 8, .94);
@@ -229,19 +231,8 @@ html, body {
 .poster-track { position: absolute; inset: 0; touch-action: pan-y; }
 .poster-slide {
   position: absolute; left: 50%; top: 50%; margin: 0;
-  width: min(520px, calc(100cqw - 128px), calc((100cqh - 80px) * var(--ratio, .8)));
-  aspect-ratio: var(--ratio, .8);
-  transform: translate(calc(-50% + 22px), calc(-50% + 10px)) rotate(7deg) scale(.96);
-  transition: transform .65s cubic-bezier(.22, .8, .24, 1), filter .65s;
-  filter: brightness(.7); z-index: 0; cursor: pointer;
-}
-.poster-slide.is-active { transform: translate(calc(-50% - 12px), calc(-50% - 8px)); filter: none; z-index: 2; cursor: default; }
-.poster-slide.leaving { animation: cardShuffle .65s cubic-bezier(.22, .8, .24, 1); }
-@keyframes cardShuffle {
-  0% { transform: translate(calc(-50% - 12px), calc(-50% - 8px)); z-index: 3; }
-  45% { transform: translate(calc(-50% + 150px), calc(-50% - 20px)) rotate(12deg); z-index: 3; }
-  55% { z-index: 0; }
-  100% { transform: translate(calc(-50% + 22px), calc(-50% + 10px)) rotate(7deg) scale(.96); z-index: 0; }
+  width: min(520px, calc(100cqw - 32px), calc((100cqh - 16px) * var(--ratio, .645)));
+  aspect-ratio: var(--ratio, .645); transform: translate(-50%, -50%);
 }
 .poster-slide img {
   display: block; width: 100%; height: 100%; border-radius: 2px;
@@ -249,27 +240,11 @@ html, body {
   -webkit-touch-callout: default; user-select: auto; -webkit-user-select: auto;
 }
 .poster-slide img:not([src]) { visibility: hidden; }
-.poster-arrow {
-  position: absolute; top: 50%; transform: translateY(-50%); z-index: 4;
-  width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(234, 223, 198, .45);
-  background: rgba(234, 223, 198, .06); color: var(--cream);
-  font: 28px/1 Georgia, serif; cursor: pointer; transition: background .25s;
-}
-.poster-arrow:hover { background: rgba(234, 223, 198, .16); }
-.poster-arrow.prev { left: max(12px, calc(50% - 360px)); }
-.poster-arrow.next { right: max(12px, calc(50% - 360px)); }
-.poster-dots { display: flex; gap: 6px; }
-.poster-dots button {
-  padding: 3px 14px; border: 0; border-radius: 999px; background: none; cursor: pointer;
-  color: var(--cream); opacity: .5; font: 15px var(--pen); letter-spacing: .12em; transition: opacity .25s, background .25s;
-}
-.poster-dots button.on { opacity: 1; background: rgba(234, 223, 198, .15); }
 .poster-actions { display: flex; gap: 10px; }
 .btn.light { color: var(--cream); border-color: rgba(234, 223, 198, .7); min-width: 110px; }
 .btn.light:hover { background: rgba(234, 223, 198, .12); }
 .btn.light.primary { background: var(--paper) var(--noise); color: var(--ink); border-color: var(--paper); }
 .poster-tip { margin: 0; color: var(--cream-soft); font-size: 12px; letter-spacing: .1em; }
-@media (pointer: coarse) { .poster-arrow { display: none; } }
 
 @media (max-width: 520px) {
   .brand-en { font-size: 32px; }
@@ -280,7 +255,6 @@ html, body {
   .tag .en { font-size: 16px; }
   .tag .cn, .tag.small .cn { font-size: 15px; }
   .toolbar { gap: 6px; padding: 0 6px; }
-  .poster-slide { width: min(calc(100cqw - 84px), calc((100cqh - 64px) * var(--ratio, .8))); }
   .card { padding: 28px 28px 24px; }
   .corner { width: 60px; height: 60px; }
   .card-msg { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='44' preserveAspectRatio='none'%3E%3Cg stroke='%23806246' stroke-opacity='.24' stroke-width='1'%3E%3Cpath d='M0 12.5H600M0 17.5H600M0 22.5H600M0 27.5H600M0 32.5H600'/%3E%3C/g%3E%3C/svg%3E"); }

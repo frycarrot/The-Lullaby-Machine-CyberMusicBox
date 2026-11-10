@@ -24,7 +24,6 @@ const scenes = [
   { name: 'desktop-pause', vp: D, play: 6000, pause: true },
   { name: 'desktop-end', vp: D, play: 23300 },
   { name: 'poster', vp: D, poster: true },
-  { name: 'poster2', vp: D, poster: true, next: true },
   { name: 'template-link', vp: D, card: true,
     hash: '#%5B八音盒%3A速度66%7C拍号3/4%7C纸带3%7C信封3%7C木色2%7C旋律%3A(1,1+10);(3,12);(5,10);(7,4+13);(9,12);(11,11);(13,5+9);(15,8);(17,9);(19,1+5+10)%7C图形%3A(1,8);(2,9);(3,10);(4,9);(5,8)%7CTo%3A小兔%7CFrom%3A阿机%7C寄语%3A今晚给你写了一小段旋律，晚安。%5D' },
   { name: 'mobile', vp: { width: 390, height: 844 }, mobile: true },
@@ -56,9 +55,8 @@ for (const s of scenes) {
     await page.click('#btnSave');
     await page.waitForFunction(() => document.getElementById('posterLayer').classList.contains('open'), null, { timeout: 20000 });
     await page.waitForTimeout(700);
-    if (s.next) { await page.click('#posterNext'); await page.waitForTimeout(900); }
-    if (!s.next && !s.mobile) {
-      for (const id of ['posterImgScene', 'posterImgCard']) {
+    if (!s.mobile) {
+      for (const id of ['posterImgLetter']) {
         const b64 = await page.evaluate(async (id) => {
           const blob = await (await fetch(document.getElementById(id).src)).blob();
           return await new Promise(r => { const fr = new FileReader(); fr.onload = () => r(fr.result.split(',')[1]); fr.readAsDataURL(blob); });

@@ -17,7 +17,7 @@
 | `js/notation.js` | 高音谱号路径；把旋律前 4 小节画成五线谱 SVG；图形戳点阵 SVG（卡片和盒盖阴刻共用） |
 | `js/audio.js` | Web Audio 合成的八音盒音色、混响、星光叮铃 |
 | `js/scene.js` | three.js 场景：追光、木雕八音盒、信封信纸、纸带路径与软纸变形、粒子 |
-| `js/poster.js` | 保存图片：八音盒照片（`MBScene.snapshot` 临时改尺寸渲一帧）+ 寄语卡，预览浮层两张错位叠放 |
+| `js/poster.js` | 保存图片：单张竖版信纸，整合 To、图形戳、旋律、八音盒照片（`MBScene.snapshot`）、寄语与 From；随文本加高 |
 | `js/app.js` | 读链接、等字体、按钮与弹窗 |
 | `vendor/three.min.js` | three.js r158 |
 | `fonts/` | Pinyon Script 与 OFL 许可 |
