@@ -5,7 +5,7 @@
 ## 本地预览
 
 - 双击 `手机预览.cmd`，或运行 `node tools/serve.mjs`，电脑打开 `http://localhost:8849/`。手机连同一个 Wi-Fi，打开窗口里打印的局域网地址。
-- 声音需要先点一下页面上的按钮才能播放（浏览器规定）。iPhone 打开静音键时网页没有声音。
+- 声音需要先点一下页面上的按钮才能播放（浏览器规定）。支持 Audio Session 的浏览器会在点击播放时请求 playback 模式，并等待 AudioContext 恢复后再播放；旧版 iOS 或内嵌浏览器仍可能需要关闭静音。
 - 截图检查：服务开着时运行 `node tools/shot.mjs`（可加场景名，如 `node tools/shot.mjs desktop-end`），图片在 `tools/_shots/`。它借用 `CarrotHomeSystem/tools/ui-inspector` 里装好的 Playwright 和本机 Edge。
 
 ## 文件

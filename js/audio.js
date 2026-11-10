@@ -8,7 +8,7 @@
   var ctx = null, master = null, dry = null, wet = null, playBus = null;
 
   function ensure() {
-    if (ctx) { if (ctx.state === 'suspended') ctx.resume(); return ctx; }
+    if (ctx) return ctx;
     var AC = root.AudioContext || root.webkitAudioContext;
     if (!AC) return null;
     ctx = new AC();
@@ -26,6 +26,23 @@
     wet = ctx.createGain(); wet.gain.value = 0.34;
     wet.connect(verb); verb.connect(master);
     return ctx;
+  }
+
+  // 必须在点击事件内调用；先请求媒体播放模式，再等待音频时钟真正运行。
+  async function unlock() {
+    try {
+      if (root.navigator && root.navigator.audioSession) root.navigator.audioSession.type = 'playback';
+    } catch (e) { /* 不支持此模式的浏览器仍尝试恢复 AudioContext */ }
+    var audio = ensure();
+    if (!audio) throw new Error('AudioContext unavailable');
+    var timer;
+    try {
+      await Promise.race([
+        audio.state === 'running' ? Promise.resolve() : audio.resume(),
+        new Promise(function (_, reject) { timer = setTimeout(function () { reject(new Error('Audio start timeout')); }, 4000); })
+      ]);
+      if (audio.state !== 'running') throw new Error('AudioContext not running');
+    } finally { clearTimeout(timer); }
   }
 
   // 生成一段混响冲激：衰减的立体声噪声，高频衰得更快
@@ -159,7 +176,7 @@
   }
 
   root.MBAudio = {
-    ensure: ensure,
+    ensure: ensure, unlock: unlock,
     now: function () { return ctx ? ctx.currentTime : 0; },
     startBus: startBus, stopBus: stopBus, chord: chord, sparkle: sparkle,
     ready: function () { return !!ctx; }

@@ -49,11 +49,24 @@
     b.setAttribute('aria-label', PLAY_TEXT[s]);
   }
 
-  function onPlay() {
+  var audioStarting = false;
+  async function onPlay() {
+    if (audioStarting) return;
     if (MBScene.isPlaying()) { MBScene.pause(); setPlayState('play'); return; }
-    hideHint();
-    setPlayState('pause');
-    MBScene.play(function () { setPlayState('replay'); });
+    audioStarting = true;
+    $('btnPlay').disabled = true;
+    try {
+      await window.MBAudio.unlock();
+      hideHint();
+      setPlayState('pause');
+      MBScene.play(function () { setPlayState('replay'); });
+    } catch (e) {
+      setPlayState(MBScene.mode() === 'done' ? 'replay' : 'play');
+      toast('声音还没启动，请再点一次播放。iPhone 请检查媒体音量和静音开关，也可在 Safari 中打开。', 10000);
+    } finally {
+      audioStarting = false;
+      $('btnPlay').disabled = false;
+    }
   }
 
   var hintTimer = 0;
